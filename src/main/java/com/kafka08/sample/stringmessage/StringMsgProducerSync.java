@@ -1,4 +1,4 @@
-package com.whs.kafka.sample.stringmessage;
+package com.kafka08.sample.stringmessage;
 
 import java.util.Properties;
 

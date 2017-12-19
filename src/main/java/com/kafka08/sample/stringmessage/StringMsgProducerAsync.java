@@ -1,7 +1,5 @@
-package com.whs.kafka.sample.stringmessage;
+package com.kafka08.sample.stringmessage;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 import kafka.javaapi.producer.Producer;
@@ -9,13 +7,12 @@ import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
 
 /**
- * 同步发送(实时),批量发送,这样性能比单条发送快很多
- * 批量发送的性能也是比较快的
+ * 异步发送(达到满足条件)
  * <p>Description:</p>
  * @author hansen.wang
  * @date 2017年1月10日 上午11:14:09
  */
-public class StringMsgProducerSyncWithBatch {
+public class StringMsgProducerAsync {
 	public static void main(String[] args) {
 		
 		Properties props = new Properties();
@@ -33,35 +30,25 @@ public class StringMsgProducerSyncWithBatch {
 		 */
 		props.put("request.required.acks", "1");
 		
-		//同步发送
-		props.put("producer.type", "sync");
+		//异步发送
+		props.put("producer.type", "async");
+		//每次批量的大小
+		props.put("batch.num.messages", "5000");
+		//发送时间间隔,毫秒为单位
+		props.put("queue.buffering.max.ms", "3000");
+		
 		
 		ProducerConfig config = new ProducerConfig(props);
 		Producer<String, String> producer = new Producer<String, String>(config);
 		
-		String topic = "kafka-topic-sync-1";
+		String topic = "kafka-topic-async-1";
 		
 		long t1 = System.currentTimeMillis();
 		System.out.println("start : " + t1);
 		
-		int batchSize = 2000;
-		int currCount = 0;
-		List<KeyedMessage<String, String>> messages = new ArrayList<>(batchSize);
-		
 		for(int i=0; i<10000; i++) {
 			KeyedMessage<String, String> msg = new KeyedMessage<String, String>(topic, i + "");
-			messages.add(msg);
-			if((++currCount) % batchSize == 0) {
-				producer.send(messages);
-				messages.clear();
-				currCount = 0;
-			}
-		}
-		
-		if(currCount != 0) {
-			producer.send(messages);
-			messages.clear();
-			currCount = 0;
+			producer.send(msg);
 		}
 		
 		long t2 = System.currentTimeMillis();

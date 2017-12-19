@@ -1,4 +1,4 @@
-package com.whs.kafka.sample.objectmessage;
+package com.kafka08.sample.objectmessage;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package com.whs.kafka.sample.partitionmessage;
+package com.kafka08.sample.partitionmessage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
