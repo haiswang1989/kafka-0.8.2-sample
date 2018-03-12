@@ -37,6 +37,8 @@ public class Kafka11Producer {
         } else {
             //异步的方式
             producer.send(record, new ProducerCallback());
+            //异步发送如果需要立即发送到server端,这边需要flush一下,不然不会立即发送到server端
+            producer.flush();
         }
         
         producer.close();
